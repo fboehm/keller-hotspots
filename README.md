@@ -19,7 +19,6 @@ Here is Keller's Table S1 (from the Supplemental Documents).
 
 Table: From [Keller et al. 2018 GENETICS](https://www.genetics.org/content/209/1/335), [Supplementary table 1](https://figshare.com/articles/Supplemental_Material_for_Attie_et_al_2018_in_review_/5977459)
 
-<iframe src="https://widgets.figshare.com/articles/5977459/embed?show_title=1" width="568" height="351" allowfullscreen="true" frameborder="0"></iframe>
 
 
 
