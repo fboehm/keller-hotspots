@@ -17,5 +17,9 @@ Here is Keller's Table S1 (from the Supplemental Documents).
 | 11   | 71           |   126                   |  Sat2               |  115                                       |
 | 13   | 112.5        |   104                   |  Il6st              |  82                                        |
 
-Table: From Keller et al. 2018 GENETICS, Supplementary table 1
+Table: From [Keller et al. 2018 GENETICS](https://www.genetics.org/content/209/1/335), [Supplementary table 1](https://figshare.com/articles/Supplemental_Material_for_Attie_et_al_2018_in_review_/5977459)
+
+
+
+
 
