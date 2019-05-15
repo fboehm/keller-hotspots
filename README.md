@@ -9,8 +9,8 @@ Note that we've already done [the analysis for Keller's Chr2 hotspot](https://gi
 
 Here is Keller's Table S1 (from the Supplemental Documents).
 
-Chr position (Mb) number of transcripts candidate mediator number of genes with LOD difference > 1.5
---- --------      --------------------- ------------------ -----------------------------------------
+Chr   position (Mb)   number of transcripts   candidate mediator   number of genes with LOD difference > 1.5
+---   -----------     ---------------------   ------------------   -----------------------------------------
 
 2   165.5          147                   Hnf4a              88     
 5   146            182                   Pdx1               77
