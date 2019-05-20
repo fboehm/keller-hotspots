@@ -19,12 +19,29 @@ Here is Keller's Table S1 (from the Supplemental Documents).
 
 Table: From [Keller et al. 2018 GENETICS](https://www.genetics.org/content/209/1/335), [Supplementary table 1](https://figshare.com/articles/Supplemental_Material_for_Attie_et_al_2018_in_review_/5977459)
 
+## Data
 
+[Here](https://datadryad.org/resource/doi:10.5061/dryad.pj105) is the Data Dryad link for the data.
 
 
 ## Pairwise pleiotropy tests
 
-For each 
+For each of the four hotspots, we need to identify strong local expression QTL that will be counted as the set of local traits for that hotspot. We then pair each nonlocal trait with each of the 
+
+
+## Mediation analysis
+
+We assess whether each of the local traits is a mediator for the QTL - nonlocal trait association. We determine both LOD difference and LOD difference proportion statistics.
+
+## Questions
+
+What does it mean if multiple local traits show evidence of mediating the association between QTL and a single nonlocal trait? Is it enough to say that the local trait with the greatest LOD difference is the true mediator? What assumptions go into such a conclusion?
+
+
+
+
+
+
 
 
 
