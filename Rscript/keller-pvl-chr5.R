@@ -38,9 +38,9 @@ readRDS("data/addcovar.rds") -> covar
 # remove subjects with missing data
 
 id2keep <- rownames(local)
-gg <- geno[[1]]
+gg <- geno
 gg2 <- gg[rownames(gg) %in% id2keep, , ]
-kk <- kinship[[1]]
+kk <- kinship
 kk2 <- kk[rownames(kk) %in% id2keep, colnames(kk) %in% id2keep]
 cc2 <- covar[rownames(covar) %in% id2keep, ]
 
