@@ -44,6 +44,8 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 +WantFlocking = true
 +WantGlideIn = true
 
-# Tell HTCondor to run instances of our job: (one job per pair) 123 nonlocal x 78 local
-queue 5
+max_idle=1000
+
+# Tell HTCondor to run instances of our job: (one job per pair) 123 nonlocal x 73 local = 8979
+queue 8979
 
