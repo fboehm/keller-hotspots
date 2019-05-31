@@ -1,0 +1,326 @@
+---
+title: "Setting up for use of Condor CHTC"
+author: "Frederick Boehm"
+date: "05/30/2019"
+output: gihtub_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Goals
+
+Goal here is to document the setup & organization of files that I need for using Condor CHTC to do my two-dimensional scans as part of the analyses of the four Keller hotspots. Note that they reported 5 hotspots. I previously performed the analyses for Chromosome 2 hotspot.
+
+## Setting
+
+Recall that I have downloaded a Keller 2018 .RData file from DataDryad that contains many of their results. The .RData file, "data/Attie_DO378_eQTL_viewer_v1.Rdata" annotates 139 traits as belonging to the chromosome 2 hotspot.
+
+Following Karl's suggestion, I want to look at not only the local trait that Keller identifies as causal for the hotspot, but also several other local-ish traits that have reasonable univariate LOD scores.
+
+## Plan for using Condor
+
+I'll batch the two-dimensional scan jobs by the local trait identity. So, for each local trait that I choose to examine, I'll have 139 jobs - one for each pairing with a hotspot trait.
+
+I'll organize the data files such that each local trait is its own RData file, while the 139 nonlocal traits are all in a single RData file. We can then use the automatically assigned job number to choose a nonlocal trait for each job.
+
+## Preparing RDS files for Chr 5 analysis
+
+
+```{r, load_attie}
+load("~/Box Sync/attie/keller2018-chr2-hotspot-chtc/data-to-ignore/Attie_DO378_eQTL_viewer_v1.Rdata")
+ls()
+library(tidyverse)
+```
+
+```{r checks}
+dataset.islet.rnaseq$expr %>%
+  dim
+colnames(dataset.islet.rnaseq$expr) %>%
+  head
+```
+
+We need to get the names of the nonlocal traits that map to Chromosome 5 hotspot. 
+
+```{r, make_Chr5_tib}
+dataset.islet.rnaseq$annots %>%
+  colnames
+#dataset.islet.rnaseq$annots$hotspot
+dataset.islet.rnaseq$annots %>%
+  filter(hotspot == "chr5") -> hotspot_annot_tib
+dim(hotspot_annot_tib)
+```
+
+Keller et al., in their supplementary files, reported 182 transcripts, yet I've isolated only 180 here. 
+
+I previously documented the issue with the Attie data set's hotspot annotations. Namely, when that file was created, they permitted the "hotspot" field to be only a single value per transcript. Thus, if a transcript mapped to multiple hotspots, it would still have only a single value in this "hotspot" field. Because of this, I need to first redo the mediation analyses that Keller did. 
+
+Specifically, I'll isolate all ~600 or so transcripts that map to at least one hotspot per the hotspot annotation. I'll then perform mediation analyses with each (for the appropriate local transcript).
+
+
+```{r}
+dataset.islet.rnaseq$annots %>%
+  filter(!is.na(hotspot)) -> hotspot_all_tx
+dim(hotspot_all_tx)
+```
+
+I have 671 transcripts. Let's examine all 671 at each of the four hotspots that I have yet to study, ie, those on Chromosomes 5, 7, 11, and 13. Actually, before I do that, I want to get the genome-wide scan results for these 671 transcripts to see, for each, which hotspots they map to.
+
+```{r get_671_tx}
+tx671 <- dataset.islet.rnaseq$expr[ , colnames(dataset.islet.rnaseq$expr) %in% hotspot_all_tx$gene_id]
+dim(tx671)  
+```
+
+Now, I need to run `scan1` for each of the 671 traits.
+
+Note that I need to do these with the covariates: sex and the wave indicators.
+
+```{r load_qtl2}
+library(qtl2)
+```
+
+
+
+```{r scan1_671}
+fn <- "_cache/s1_671.rds"
+if (file.exists(fn)){
+  s1_671 <- readRDS(fn)
+} else {
+  s1_671 <- scan1(genoprobs = genoprobs, pheno = tx671, kinship = K, addcovar = dataset.islet.rnaseq$covar, cores = 5)
+  saveRDS(s1_671, file = fn)
+}
+
+```
+
+
+I forgot that the LOD peaks for all traits are saved in `dataset.islet.rnaseq$lod.peaks`. It has nearly 40,000 peaks recorded. I really just need to look at it. That is, for now, I don't really need the output of `scan1()`.
+
+We want the ensembl ids for the traits that map to Chr 5 hotspot. First, define the boundaries of the hotspot. The supplemental table in Keller et al. 2018 lists only the midpoint of the hotspot. I believe that the half-width is 2 Mb.
+
+```{r}
+c5hot_lower <- 144
+c5hot_upper <- 148
+```
+
+Now, filter to get those traits that map to the hotspot. Note that we're likely to get local traits, too, in this step.
+
+```{r}
+dataset.islet.rnaseq$lod.peaks %>%
+  filter(chrom == 5, pos <= c5hot_upper, pos >= c5hot_lower) %>%
+  left_join(y = dataset.islet.rnaseq$annots, by = c("annot.id" = "gene_id")) %>%
+  filter(!duplicated(annot.id)) %>%
+  filter(lod >= 7.18)
+```
+
+The above yields 226 expression traits that map to the hotspot on Chr 5. The list includes both local and nonlocal traits. We'll create two distinct objects, one for locals and one for nonlocal traits.
+
+```{r}
+local_annot <- dataset.islet.rnaseq$lod.peaks %>%
+  filter(chrom == 5, pos <= c5hot_upper, pos >= c5hot_lower) %>%
+  left_join(y = dataset.islet.rnaseq$annots, by = c("annot.id" = "gene_id")) %>%
+  filter(!duplicated(annot.id)) %>%
+  filter(lod >= 7.18) %>%
+  mutate(local_tx = chr ==5) %>%
+  filter(local_tx)
+```
+
+```{r}
+dim(local_annot)
+```
+
+
+
+```{r}
+nonlocal_annot <- dataset.islet.rnaseq$lod.peaks %>%
+  filter(chrom == 5, pos <= c5hot_upper, pos >= c5hot_lower) %>%
+  left_join(y = dataset.islet.rnaseq$annots, by = c("annot.id" = "gene_id")) %>%
+  filter(!duplicated(annot.id)) %>%
+  filter(lod >= 7.18) %>% #genomewide threshold
+  mutate(local_tx = chr == 5) %>%
+  filter(!local_tx) %>% 
+  filter(!is.na(hotspot))
+```
+
+
+```{r}
+dim(nonlocal_annot)
+```
+
+We'll use only those nonlocal traits that Keller et al. annotated as mapping to a hotspot.
+
+This gives us 182 traits for Chr 5 hotspot, which is what Keller et al. reported.
+
+We also want to look at the local traits for Chr5 hotspot. We have 42 local traits. We want to identify a subset of those for two-dimensional scans. Let's first limit to those near the hotspot, ie, within 5Mb of either end.
+
+```{r}
+local_annot2 <- local_annot %>%
+  filter(middle <= c5hot_upper + 5, middle >= c5hot_lower - 5) %>%
+  arrange(desc(lod))
+```
+
+Recall that *Pdx1* is the gene that Keller et al. identified as the key mediator for Chr 5 hotspot. Its LOD is only 15, which seems to indicate that I should be looking at a broad set of local traits, not just those, eg., with LOD > 40!
+
+Also, I'm limiting consideration of local genes to those with middle within 5Mb of the hotspot. 
+
+Now, I make the two expression trait matrices that I need for use with Condor.
+
+```{r}
+Chr5hot_local <- dataset.islet.rnaseq$expr[, colnames(dataset.islet.rnaseq$expr) %in% local_annot2$annot.id]
+Chr5hot_nonlocal <- dataset.islet.rnaseq$expr[, colnames(dataset.islet.rnaseq$expr) %in% nonlocal_annot$annot.id]
+saveRDS(Chr5hot_local, "../data/Chr5hot_local.rds")
+saveRDS(Chr5hot_nonlocal, "../data/Chr5hot_nonlocal.rds")
+saveRDS(K$`5`, "../data/Chr5_kinship.rds")
+saveRDS(genoprobs$`5`, "../data/Chr5_aprobs.rds")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+dataset.islet.rnaseq$expr %>%
+  as_tibble() %>%
+  select(as.character(hotspot_annot_tib$gene_id)) -> hotspot_expr_tib
+```
+
+```{r}
+hotspot_expr_tib %>% dim
+```
+
+```{r}
+hotspot_expr_tib %>%
+  mutate(mouse_id = rownames(dataset.islet.rnaseq$expr)) -> hotspot_expr_tib2
+```
+
+```{r}
+colnames(hotspot_expr_tib2) %>% tail
+```
+
+```{r}
+hotspot_expr_tib2 %>% dim
+```
+
+
+## Save tibble with expr data and mouse ID numbers in a RDS file
+
+```{r}
+saveRDS(hotspot_expr_tib2, file = "../data-to-condor/hotspot_expr_tib2_keller_chr2.rds")
+```
+
+## Identify local traits to study
+
+First, we partition the expression data by subsetting on those traits that are located on chromosome 2 (ie, the gene is part of chromosome 2)
+
+```{r}
+dataset.islet.rnaseq$annots %>%
+  filter(chr == "2")
+```
+
+Where, exactly, is the chromosome 2 hotspot within chromosome 2?
+
+```{r}
+dataset.islet.rnaseq$lod.peaks %>%
+  dim
+```
+We see, from the above, that, collectively, the expression traits have 39,958 QTL.
+
+We choose only those traits that map to chromosome 2:
+
+```{r}
+dataset.islet.rnaseq$lod.peaks %>%
+  filter(chrom == "2")
+```
+
+We now have 3,458 QTL on chromosome 2.
+
+Recall that Keller et al 2018 studied the gene *Hnf4a* as a putative causal gene. The hotspot is centered around 164 Mb on chromosome 2.
+
+We want to see how many local genes have QTL and are positioned at 150 Mb or greater.
+
+To do this, we'll merge the lod.peaks object (after filtering for chr2 QTL) with the annots object. 
+
+
+```{r}
+dataset.islet.rnaseq$lod.peaks %>%
+  filter(chrom == "2") %>%
+  left_join(dataset.islet.rnaseq$annots, by = c("annot.id" = "gene_id")) %>%
+  filter(chr == "2") %>%
+  filter(pos > 150) %>%
+  arrange(desc(lod)) -> local_qtl_chr2
+# chr, here, refers to the position of the transcript's gene, ie, the chromosome on which the gene is located, and is not derived from QTL data
+local_qtl_chr2 %>%
+  filter(symbol == "Hnf4a")
+```
+
+We see that Hnf4a has a lod scores of 49 at 164.02 Mb on chromosome 2. The gene itself starts and stops at 163.51 and 163.57 on chromosome 2.
+
+I don't need to analyze every trait that is local, near the hotspot, and has a reasonable lod score. But, I should choose among them. I want to consider distance from the hotspot and lod peak height when making these choices. Specifically, I want a collection of maybe 15 traits that have reasonable lod scores and are spread from ~150Mb to the end of chromosome 2.
+
+```{r}
+local_qtl_chr2 %>%
+  filter(lod > 40)
+```
+
+If I consider only those traits with lod above 40, I still have 93 traits. Too many. The top three in the table above are positioned at 155, 164 and 177. Perhaps I should use them, then choose a handful of genes that are within, say, 3 Mb of the center of the hotspot (approximately 164 Mb).
+
+```{r}
+local_qtl_chr2 %>%
+  filter(lod > 40) %>%
+  filter(pos > 160, pos < 168)
+```
+
+
+We now have 19 traits that we might consider (above). It might be worthwhile to examine the allele effects plots for the 19 traits before choosing those traits that we'll use in 2-dimensional scans. Alternatively, we could just examine all 19, ie, do 19 x 139 two-dimensional scans (in 19 distinct submit files).
+
+## Getting the expression values for each trait and each mouse 
+
+We'll use the 19 traits above plus the two traits that are slightly more distant from the hotspot, ie , *Ahcy* and *GM4723*. This gives us a total of 21 local traits.
+
+Rather than making a separate RDS file for each local trait, I'll make one RDS file that contains all of them. I'll then just need to specify, in my condor submit file, which of the traits I want to use in a given condor submission.
+
+```{r}
+trait_names1 <- local_qtl_chr2 %>%
+  filter(lod > 40) %>%
+  filter(pos > 160, pos < 168) %>%
+  select(annot.id) %>%
+  unlist() %>%
+  as.character()
+trait_names <- c(trait_names1, "ENSMUSG00000027597", "ENSMUSG00000078898") # add ids for Ahcy and GM4723
+
+```
+
+Now, we subset the expression data matrix to get only the 21 traits that we seek.
+
+```{r}
+dataset.islet.rnaseq$expr %>%
+  as_tibble() %>%
+  select(trait_names) %>%
+  mutate(mouse_id = rownames(dataset.islet.rnaseq$expr)) %>%
+  saveRDS("../data-to-condor/keller2018-chr2-local-expr.rds")
+```
+
+
+## File transfer to condor
+
+On September 10, 2018, about 10:10 AM, I transferred via scp the two rds files (created above) to the CHTC.
+
+Before doing that, I cloned the git repository (which is also on github) "keller2018-chr2-hotspot-chtc" to my chtc disk space. Specifically, I put it under my home directory, ie, I didn't put it under the existing "attie" directory within my home directory on chtc.
+
+
+
+
+
+
+## References
+
+Keller et al. 2018. Genetics. Genetic drivers of pancreatic islet function.
+
