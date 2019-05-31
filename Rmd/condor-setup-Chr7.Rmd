@@ -142,6 +142,9 @@ We consider the physical map.
 ```
 
 
+```{r}
+dim(local_annot2)
+```
 
 
 
