@@ -176,12 +176,28 @@ saveRDS(genoprobs$`5`, "../data/Chr5_aprobs.rds")
 ```
 
 
+Lastly, we need to identify the scan region for Chr 5.
+
+We consider the physical map.
+
+```{r}
+(start_index <- which(map$`5`== map$`5`[map$`5` > c5hot_lower][1]) - 50)
+```
+
+```{r}
+(stop_index <- which(map$`5`== map$`5`[map$`5` > c5hot_upper][1]) + 50)
+```
+
+```{r}
+(nsnp <- stop_index - start_index + 1)
+```
 
 
+Lastly, we copy the covariates rds file from the earlier analysis.
 
-
-
-
+```{bash}
+cp ~/Box\ Sync/attie/keller2018-chr2-hotspot-chtc/data/addcovar.rds ../data/.
+```
 
 
 

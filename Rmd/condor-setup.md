@@ -50,14 +50,14 @@ ls()
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.1.1       ✔ purrr   0.3.2  
     ## ✔ tibble  2.1.1       ✔ dplyr   0.8.0.1
     ## ✔ tidyr   0.8.3       ✔ stringr 1.4.0  
     ## ✔ readr   1.3.1       ✔ forcats 0.4.0
 
-    ## ── Conflicts ───────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -940,6 +940,38 @@ saveRDS(Chr5hot_local, "../data/Chr5hot_local.rds")
 saveRDS(Chr5hot_nonlocal, "../data/Chr5hot_nonlocal.rds")
 saveRDS(K$`5`, "../data/Chr5_kinship.rds")
 saveRDS(genoprobs$`5`, "../data/Chr5_aprobs.rds")
+```
+
+Lastly, we need to identify the scan region for Chr 5.
+
+We consider the physical map.
+
+``` r
+(start_index <- which(map$`5`== map$`5`[map$`5` > c5hot_lower][1]) - 50)
+```
+
+    ## 5_144013221 
+    ##        3498
+
+``` r
+(stop_index <- which(map$`5`== map$`5`[map$`5` > c5hot_upper][1]) + 50)
+```
+
+    ## 5_148006053 
+    ##        3766
+
+``` r
+(nsnp <- stop_index - start_index + 1)
+```
+
+    ## 5_148006053 
+    ##         269
+
+Lastly, we copy the covariates rds file from the earlier
+analysis.
+
+``` bash
+cp ~/Box\ Sync/attie/keller2018-chr2-hotspot-chtc/data/addcovar.rds ../data/.
 ```
 
 ## References
