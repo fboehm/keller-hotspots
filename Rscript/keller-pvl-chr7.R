@@ -2,7 +2,7 @@
 # We analyze the chromosome 2 hotspot from Keller et al 2018 (GENETICS).
 # Each scan considers two traits. 
 ##First read in the arguments listed at the command line
-nhot <-  # number of trans hotspot traits for this hotspot
+nhot <- 123 # number of trans hotspot traits for this hotspot
 args <- R.utils::commandArgs(trailingOnly = TRUE, asValues = TRUE)
 print(args)
 ##args is now a list of character vectors
