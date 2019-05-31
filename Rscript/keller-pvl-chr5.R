@@ -4,7 +4,7 @@
 # Keller et al 2018 state that Hnf4a is causal for 88 of the 147 hotspot nonlocal traits.
 
 ##First read in the arguments listed at the command line
-nhot <- 8 # number of trans hotspot traits for this run
+nhot <- 182 # number of trans hotspot traits for this hotspot
 args <- R.utils::commandArgs(trailingOnly = TRUE, asValues = TRUE)
 print(args)
 ##args is now a list of character vectors
@@ -22,14 +22,14 @@ print(run_num)
 
 
 # load expression traits
-readRDS("data/hotspot-chr2-8missing-genes.rds") -> hotspot
-readRDS("data/local_expr13.rds") -> local
+readRDS("data/Chr5hot_nonlocal.rds") -> hotspot
+readRDS("data/Chr5hot_local.rds") -> local
 
 # load chr2 allele probabilities
-readRDS("genoprobs_chr2.rds") -> geno # genoprobs_chr2.rds is on SQUID
+readRDS("data/Chr5_aprobs.rds") -> geno # genoprobs_chr2.rds is on SQUID
 
 # load kinship matrix (LOCO, ie, for chromosome 2, ie, doesn't use chr2 data)
-readRDS("data/kinship_chr2.rds") -> kinship
+readRDS("data/Chr5_kinship.rds") -> kinship
 
 # load covariates
 readRDS("data/addcovar.rds") -> covar

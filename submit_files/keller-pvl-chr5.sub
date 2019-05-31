@@ -44,6 +44,6 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 +WantFlocking = true
 +WantGlideIn = true
 
-# Tell HTCondor to run instances of our job: (one job per pair, 8 * 13)
+# Tell HTCondor to run instances of our job: (one job per pair)
 queue 5
 
