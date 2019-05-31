@@ -22,17 +22,17 @@ print(run_num)
 
 
 # load expression traits
-readRDS("data/Chr5hot_nonlocal.rds") -> hotspot
-readRDS("data/Chr5hot_local.rds") -> local
+readRDS("Chr5hot_nonlocal.rds") -> hotspot
+readRDS("Chr5hot_local.rds") -> local
 
 # load chr2 allele probabilities
-readRDS("data/Chr5_aprobs.rds") -> geno # genoprobs_chr2.rds is on SQUID
+readRDS("Chr5_aprobs.rds") -> geno # genoprobs_chr2.rds is on SQUID
 
 # load kinship matrix (LOCO, ie, for chromosome 2, ie, doesn't use chr2 data)
-readRDS("data/Chr5_kinship.rds") -> kinship
+readRDS("Chr5_kinship.rds") -> kinship
 
 # load covariates
-readRDS("data/addcovar.rds") -> covar
+readRDS("addcovar.rds") -> covar
 
 
 # remove subjects with missing data
