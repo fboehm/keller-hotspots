@@ -62,8 +62,11 @@ s_out <- scan_pvl(probs = gg2,
          start_snp = s1,
          n_snp = nsnp
            )
+# make a profile lod tibble
+map <- readRDS("map.rds")
+s_out <- tidy_scan_pvl(s_out, pmap = map$`11`) # changes for each hotspot
 
-colnames(pheno)
+# write output
 fn_out <- paste0("pvl-run", run_num, "_", proc_num, "_", paste(phenames, collapse = "_"), ".txt")
 write.table(s_out, fn_out, quote = FALSE)
 q("no")

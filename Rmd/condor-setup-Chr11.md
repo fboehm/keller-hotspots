@@ -39,14 +39,14 @@ ls()
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ──────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.1.1       ✔ purrr   0.3.2  
     ## ✔ tibble  2.1.1       ✔ dplyr   0.8.0.1
     ## ✔ tidyr   0.8.3       ✔ stringr 1.4.0  
     ## ✔ readr   1.3.1       ✔ forcats 0.4.0
 
-    ## ── Conflicts ─────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ───────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -827,6 +827,7 @@ saveRDS(hot_local, "../data/Chr11hot_local.rds") # change this
 saveRDS(hot_nonlocal, "../data/Chr11hot_nonlocal.rds") # change this
 saveRDS(K$`11`, "../data/Chr11_kinship.rds") # change this - both
 saveRDS(genoprobs$`11`, "../data/Chr11_aprobs.rds") # change this - both
+saveRDS(map, "../data/map.rds")
 ```
 
 Lastly, we need to identify the scan region for Chr 11.
@@ -886,7 +887,7 @@ devtools::session_info()
     ##  collate  en_US.UTF-8                 
     ##  ctype    en_US.UTF-8                 
     ##  tz       America/Chicago             
-    ##  date     2019-06-01                  
+    ##  date     2019-06-02                  
     ## 
     ## ─ Packages ──────────────────────────────────────────────────────────────
     ##  package     * version date       lib source                        

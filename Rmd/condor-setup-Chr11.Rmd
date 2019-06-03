@@ -118,6 +118,7 @@ saveRDS(hot_local, "../data/Chr11hot_local.rds") # change this
 saveRDS(hot_nonlocal, "../data/Chr11hot_nonlocal.rds") # change this
 saveRDS(K$`11`, "../data/Chr11_kinship.rds") # change this - both
 saveRDS(genoprobs$`11`, "../data/Chr11_aprobs.rds") # change this - both
+saveRDS(map, "../data/map.rds")
 ```
 
 
