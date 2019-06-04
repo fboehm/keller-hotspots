@@ -47,5 +47,5 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 max_idle=1000
 
 # Tell HTCondor to run instances of our job: (one job per pair) 126 nonlocal x 82 local = 10332
-queue 5
+queue 10332
 
