@@ -45,7 +45,8 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 +WantGlideIn = true
 
 max_idle=1000
-periodic_release=1 # release if held for more than 1 minute
+periodic_release=True
+# release if held for more than 1 minute
 
 
 # Tell HTCondor to run instances of our job: (one job per pair) 104 nonlocal x 17 local = 1768
