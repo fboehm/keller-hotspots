@@ -50,4 +50,4 @@ periodic_release=True
 
 
 # Tell HTCondor to run instances of our job: (one job per pair) 104 nonlocal x 17 local = 1768
-queue 5
+queue 1768
