@@ -46,6 +46,9 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 
 max_idle=1000
 
+periodic_release=True
+
+
 # Tell HTCondor to run instances of our job: (one job per pair) 182 choose 2 = 
 queue 16471
 
