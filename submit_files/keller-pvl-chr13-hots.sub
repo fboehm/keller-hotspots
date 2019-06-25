@@ -1,11 +1,11 @@
 # hello-chtc.sub
 # My very first HTCondor submit file
-s1=3742
+s1=2814
 # start scan at this marker index value
-nsnp=247 
+nsnp=226
 # length of scan in number of markers
 # which run in the experimental design?
-run_num=99410
+run_num=99310
 # Specify the HTCondor Universe (vanilla is the default and is used
 #  for almost all jobs), the desired name of the HTCondor log file,
 #  and the desired name of the standard error file.  
@@ -20,7 +20,7 @@ error = pvl-$(Process)-run$(run_num).err
 #  output (or "screen output").
 #  $(Process) will be a integer number for each job, starting with "0"
 #  and increasing for the relevant number of jobs.
-executable = ../shell_scripts/keller-pvl-chr2-hots.sh
+executable = ../shell_scripts/keller-pvl-chr13-hots.sh
 arguments = $(Process) $(nsnp) $(s1) $(run_num) 
 output = pvl-$(Process)-run$(run_num).out
 #
@@ -29,7 +29,7 @@ output = pvl-$(Process)-run$(run_num).out
 #  used if there were any other files needed for the executable to run.
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = ../data/addcovar.rds,../data/map.rds,http://proxy.chtc.wisc.edu/SQUID/fjboehm/Chr2_aprobs.rds,../data/Chr2_kinship.rds,../data/Chr2hot_local.rds,../data/Chr2hot_nonlocal.rds,../Rscript,../shell_scripts,http://proxy.chtc.wisc.edu/SQUID/fjboehm/2018-11-22_R325.tar.gz,http://proxy.chtc.wisc.edu/SQUID/SLIBS.tar.gz
+transfer_input_files = ../data/addcovar.rds,../data/map.rds,../data/Chr13_aprobs.rds,../data/Chr13_kinship.rds,../data/Chr13hot_local.rds,../data/Chr13hot_nonlocal.rds,../Rscript,../shell_scripts,http://proxy.chtc.wisc.edu/SQUID/fjboehm/2018-11-22_R325.tar.gz,http://proxy.chtc.wisc.edu/SQUID/SLIBS.tar.gz
 #
 # Tell HTCondor what amount of compute resources
 #  each job will need on the computer where it runs.
@@ -45,10 +45,9 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 +WantGlideIn = true
 
 max_idle=1000
-
 periodic_release=True
+# release if held for more than 1 minute
 
-# Tell HTCondor to run instances of our job: (one job per pair) 147 nonlocal choose 2 = 10731
-# queue 10731
 
-queue 5
+# Tell HTCondor to run instances of our job: (one job per pair) 104 nonlocal choose 2 = 5356
+queue 5356
