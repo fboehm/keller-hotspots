@@ -49,6 +49,5 @@ max_idle=1000
 periodic_release=True
 
 # Tell HTCondor to run instances of our job: (one job per pair) 147 nonlocal choose 2 = 10731
-# queue 10731
+queue 10731
 
-queue 5
