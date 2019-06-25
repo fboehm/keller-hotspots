@@ -2,7 +2,7 @@
 analyzing hotspots from keller et al 2018 data
 
 
-The goal for this project is to analyze, with mediation analysis and pairwise pleiotropy tests, four of the five expression trait hotspots from the Keller et al. 2018 GENETICS data set. Pairwise pleiotropy tests will all use pairs that have one local expression trait and one nonlocal trait.
+The goal for this project is to analyze, with mediation analysis and pairwise pleiotropy tests, the five expression trait hotspots from the Keller et al. 2018 GENETICS data set. Pairwise pleiotropy tests will all use pairs that have one local expression trait and one nonlocal trait.
 
 Note that we've already done [the analysis for Keller's Chr2 hotspot](https://github.com/fboehm/keller2018-chr2-hotspot-chtc
 ). However, the early analysis of Chr 2 was incomplete. Thus, in this repo, I consider all five expression trait hotspots on Chromosomes 2, 5, 7, 11, and 13. Note that Keller defined hotspots as having at least 100 associated transcripts.
@@ -26,12 +26,17 @@ Table: From [Keller et al. 2018 GENETICS](https://www.genetics.org/content/209/1
 
 ## Pairwise pleiotropy tests
 
-For each of the four hotspots, we need to identify strong local expression QTL that will be counted as the set of local traits for that hotspot. We then pair each nonlocal trait with each of the 
+For each of the four hotspots, we need to identify strong local expression QTL that will be counted as the set of local traits for that hotspot. We then pair each nonlocal trait with each of the local traits and test for pleiotropy. 
+
+We also do all pairwise tests for pairs of nonlocal traits. 
 
 
 ## Mediation analysis
 
 We assess whether each of the local traits is a mediator for the QTL - nonlocal trait association. We determine both LOD difference and LOD difference proportion statistics.
+
+
+
 
 ## Questions
 
