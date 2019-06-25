@@ -28,7 +28,7 @@ Table: From [Keller et al. 2018 GENETICS](https://www.genetics.org/content/209/1
 
 For each of the four hotspots, we need to identify strong local expression QTL that will be counted as the set of local traits for that hotspot. We then pair each nonlocal trait with each of the local traits and test for pleiotropy. 
 
-We also do all pairwise tests for pairs of nonlocal traits. 
+We also do all pairwise tests for pairs of nonlocal traits.                     
 
 
 ## Mediation analysis
