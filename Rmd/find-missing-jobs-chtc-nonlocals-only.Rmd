@@ -1,0 +1,58 @@
+---
+title: "Identifying failed jobs from HTCondor"
+author: "Frederick Boehm"
+date: "6/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+path_to_results <- "~/Box Sync/attie/keller-hotspots/results"
+```
+
+First, how many results files do I have?
+
+Now, let's count the files in our subdirectories.
+
+```{bash}
+cd ~/Box\ Sync/attie/keller-hotspots/results/
+cd pvl-run-99010; ls | wc
+cd ../pvl-run-99110; ls | wc
+cd ../pvl-run-99210; ls | wc
+cd ../pvl-run-99310; ls | wc
+cd ../pvl-run-99410; ls | wc
+```
+
+From the submit files for these jobs, I submitted this many jobs per submit file:
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r table_jobs}
+run <- c(99010, 99110, 99210, 99310, 99410)
+number_of_jobs <- c(16471, 7503, 7875, 5356, 10731)
+hotspot_chr <- c(5, 7, 9, 13, 2)
+```
+
+We see that I'm missing 2 jobs from run 99010 and 2 from 99410.
+
+I'll now identify which jobs those are.
+
+```{r}
+library(qtl2chtc)
+```
+
+```{r, eval = TRUE}
+find_missing_jobs(DIR = "~/Box Sync/attie/keller-hotspots/results/pvl-run-99010", njobs = 16471, outfile = "~/Box Sync/attie/keller-hotspots/submit_files/run99010-bad")
+```
+
+```{r}
+find_missing_jobs(DIR = "~/Box Sync/attie/keller-hotspots/results/pvl-run-99410", njobs = 10731, outfile = "~/Box Sync/attie/keller-hotspots/submit_files/run99410-bad")
+```
+
+
