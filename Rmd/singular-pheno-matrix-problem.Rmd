@@ -1,0 +1,45 @@
+---
+title: "Investigating the failed Condor job for run 99010"
+author: "Frederick Boehm"
+date: "6/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Background
+
+The .Rout file for job 16204 of run 99010 failed the GEMMA procedure for finding variance components.
+
+Let's reproduce the problem in a R session.
+
+```{r}
+# The code below performs the two-dimensional QTL scan over the specified genomic region. 
+# We analyze the chromosome 2 hotspot from Keller et al 2018 (GENETICS).
+# Each scan considers two traits. 
+##First read in the arguments listed at the command line
+nhot <- 182 # number of trans hotspot traits for this hotspot
+proc_num <- 16204
+#(hot_indic <- proc_num %% nhot + 1) # define hot_indic 
+#(local_indic <- proc_num %/% nhot + 1) # define local_indic
+
+###############
+
+
+# load expression traits
+readRDS("../data/Chr5hot_nonlocal.rds") -> hotspot
+
+
+# create matrix of two expression traits
+hots <- combn(nhot, 2)[ , proc_num + 1]
+pheno <- hotspot[ , hots] #hots has length 2
+Matrix::rankMatrix(pheno)
+dim(pheno)
+```
+
+Because `pheno` matrix has rank 2, we can fit neither the linear mixed effects model nor the linear model. We'll have to represent this pairing as NA in the pleiotropy test matrix.
+
+
+
