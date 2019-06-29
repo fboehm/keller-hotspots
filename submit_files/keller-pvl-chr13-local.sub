@@ -5,7 +5,7 @@ s1=2814
 nsnp=226
 # length of scan in number of markers
 # which run in the experimental design?
-run_num=9931
+run_num=99311
 # Specify the HTCondor Universe (vanilla is the default and is used
 #  for almost all jobs), the desired name of the HTCondor log file,
 #  and the desired name of the standard error file.  
@@ -20,7 +20,7 @@ error = pvl-$(Process)-run$(run_num).err
 #  output (or "screen output").
 #  $(Process) will be a integer number for each job, starting with "0"
 #  and increasing for the relevant number of jobs.
-executable = ../shell_scripts/keller-pvl-chr13.sh
+executable = ../shell_scripts/keller-pvl-chr13-local.sh
 arguments = $(Process) $(nsnp) $(s1) $(run_num) 
 output = pvl-$(Process)-run$(run_num).out
 #
@@ -42,11 +42,9 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 
 # which computer grids to use:
 +WantFlocking = true
-+WantGlideIn = true
++WantGlideIn = false
 
 max_idle=1000
-periodic_release=True
-# release if held for more than 1 minute
 
 
 # Tell HTCondor to run instances of our job: (one job per pair) 104 nonlocal x 17 local = 1768
