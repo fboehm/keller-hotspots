@@ -47,5 +47,5 @@ requirements = (OpSysMajorVer == 6) || (OpSysMajorVer == 7)
 max_idle=1000
 
 
-# Tell HTCondor to run instances of our job: (one job per pair) 17 local choose 2 = 
+# Tell HTCondor to run instances of our job: (one job per pair) 17 local choose 2 = 136
 queue 136
