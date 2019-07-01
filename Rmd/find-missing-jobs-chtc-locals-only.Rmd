@@ -1,0 +1,42 @@
+---
+title: "Identifying failed jobs from HTCondor"
+author: "Frederick Boehm"
+date: "7/01/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+path_to_results <- "~/Box Sync/attie/keller-hotspots/results"
+```
+
+First, how many results files do I have?
+
+Now, let's count the files in our subdirectories.
+
+```{bash}
+cd ~/Box\ Sync/attie/keller-hotspots/results/
+cd pvl-run-99011; ls | wc
+cd ../pvl-run-99111; ls | wc
+cd ../pvl-run-99211; ls | wc
+cd ../pvl-run-99311; ls | wc
+cd ../pvl-run-99411; ls | wc
+```
+
+From the submit files for these jobs, I submitted this many jobs per submit file:
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r table_jobs}
+run <- c(99011, 99111, 99211, 99311, 99411)
+number_of_jobs <- c(666, 2628, 3321, 136, 1326)
+hotspot_chr <- c(5, 7, 9, 13, 2)
+```
+
+From the above bash outputs, we see that I'm missing no files. YAY!
